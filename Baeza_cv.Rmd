@@ -1,0 +1,252 @@
+---
+name: Josue
+surname: Baeza, PhD
+position: "Postdoctoral Fellow"
+address: "University of Pennsylvania"
+phone: 817-980-7281
+www: google.com
+email: "baeza@pennmedicine.upenn.edu"
+twitter: baezaj83
+github: baezaj
+linkedin: baezaj
+orcid: 0000-0003-4960-3905
+date: "`r format(Sys.time(), '%B %Y')`"
+output: 
+  vitae::moderncv:
+    theme: classic
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+library(tidyverse)
+library(rio)
+library(lubridate)
+library(rorcid)
+library(glue)
+library(scholar)
+
+```
+
+# Summary
+
+Postdoctoral research fellow developing mass spectrometry-based proteomics methods for studying biological systems. My postdoctoral research is aimed at understanding biochemical mechanisms of protein homeostasis with a major focus on the study of protein turnover during fetal development. 
+
+
+
+```{r data import, include=FALSE}
+
+
+# # Education data - fetching from Orcid
+# education <- orcid_educations("0000-0003-4960-3905")$`0000-0003-4960-3905`$`affiliation-group`$summaries %>% 
+#   bind_rows()
+
+education <- import("data/education.csv") %>% 
+  mutate(pi = if_else(!is.na(pi), glue("PI: {pi}"), as.character(NA)),
+         dissertation = glue("\\textbf{[dissertation]}", .open = "[", .close = "]")) %>% 
+  gather(dissertation, pi, key = "whytype", value = "why")
+
+
+# Employment data - fetching from Orcid
+employment <- orcid_employments("0000-0003-4960-3905")$`0000-0003-4960-3905`$`affiliation-group`$summaries %>%
+  bind_rows()
+
+
+# Awards
+awards <- import("data/awards_grants.csv") %>% 
+  mutate(date = mdy(date)) %>% 
+  arrange(desc(date))
+
+
+# Importing jobs
+jobs <- import("data/jobs.csv")
+jobs[jobs == ""] <- NA
+jobs <- jobs %>% 
+  tidyr::fill(Start, End, What, With, Where, Tag) %>%  
+  mutate(Start = mdy(Start),
+         End = mdy(End)) %>% 
+  mutate(When = case_when(is.na(End) ~ glue("{year(Start)}--Present") %>% as.character(),
+                          year(Start) == year(End) ~ year(End) %>% as.character(),
+                          TRUE ~ glue("{year(Start)}--{year(End)}") %>% as.character()
+                          )) %>% 
+  mutate(End = if_else(is.na(End), today() + years(2), End)) #if no end date specified, set it to two years from now for sorting purposes, i.e. so jobs I'm still doing show up at top.
+
+# Importing publications 
+pubs <- import("data/publications_google_scholar.csv")
+
+
+# Importing presentations
+presentations <- import("data/presentations.csv") %>% 
+  mutate(When = mdy(When))
+
+# Importing professional development
+professional_dev <- import("data/professional_development.csv")
+
+```
+
+
+
+
+# Education
+
+```{r}
+
+education %>% 
+  detailed_entries(when = glue("{start_date}--{end_date}"),
+                   what = degree,
+                   where = location,
+                   with = university,
+                   why = why,
+                   .protect = FALSE)
+
+
+# education %>%
+#   detailed_entries(
+#     what = `education-summary.role-title`,
+#     when = glue("{`education-summary.start-date.year.value`} - {`education-summary.end-date.year.value`}"),
+#     with = `education-summary.organization.name`,
+#     where = glue("{`education-summary.organization.address.city`}, {`education-summary.organization.address.region`}, {`education-summary.organization.address.country`}")
+#   )
+
+
+```
+
+# Research Experience
+
+```{r research}
+
+jobs %>% 
+  filter(Tag == "research") %>% 
+  arrange(desc(Start)) %>%
+  arrange(desc(End)) %>% 
+  detailed_entries(what = What,
+                   when = When,
+                   with = With,
+                   where = Where,
+                   why = Why,
+                   .protect = TRUE)
+
+
+```
+
+# Awards and Honors
+
+```{r}
+
+awards %>% 
+  filter(!tag %in% c("failed", "travel", "grant")) %>% 
+  brief_entries(what = award, when = glue("{month(date, label = TRUE)} {year(date)}"), with = with)
+
+```
+
+
+
+```{r}
+
+# Grants
+
+
+# awards %>%
+#   filter(tag == "grant") %>%
+#   detailed_entries(what = award, when = glue("{month(date, label = TRUE)} {year(date)}"),
+#                    why = amount) %>% 
+#   mutate_all(as.character) %>% 
+#   mutate(with = as.character(with),
+#          when = as.character(when),
+#          where = as.character(where))
+
+```
+
+# Teaching
+
+```{r}
+
+jobs %>% 
+  filter(Tag == "teaching") %>% 
+  arrange(desc(Start)) %>%
+  arrange(desc(End)) %>% 
+  detailed_entries(what = What,
+                   when = When,
+                   with = With,
+                   where = Where,
+                   why = Why,
+                   .protect = TRUE)
+
+
+
+```
+
+
+# Publications
+
+```{r}
+
+
+pubs <- pubs %>%
+  mutate(author = str_replace_all(author, "Cheolâ€\u0090Woo Kim", "Cheol-Woo Kim"),
+         author = str_replace_all(author, "Pascual LÃ³pez-Buesa", "Pascual Lopez-Buesa"),
+         author = str_replace_all(author, "JosÃ© A Carrodeguas", "Jose A Carrodeguas"),
+         author = str_replace_all(author, "Ramón Hurtado-Guerrero", "Ramon Hurtado-Guerrero"),
+         author = as.character(author))
+
+
+pubs %>%
+  arrange(desc(year)) %>%
+  filter(journal != "University of Wisconsin--Madison") %>% # Removing my thesis
+  detailed_entries(
+    what = title,
+    when = year,
+    with = author,
+    where = journal
+  )
+
+```
+
+# Research Talks
+
+```{r}
+
+presentations %>%
+  filter(Tag == "talk") %>%
+  arrange(desc(When)) %>%
+  detailed_entries(what = Title,
+                   when = glue("{month(When, label = TRUE)} {year(When)}"),
+                   with = Conference,
+                   where = Location,
+                   why = Award,
+                   .protect = FALSE)
+
+```
+
+
+# Selected Posters
+
+```{r}
+
+presentations %>%
+  filter(Tag == "poster") %>%
+  arrange(desc(When)) %>%
+  detailed_entries(what = Title,
+                   when = glue("{month(When, label = TRUE)} {year(When)}"),
+                   with = Conference,
+                   where = Location,
+                   why = Award)#,
+                   # .protect = FALSE)
+
+```
+
+
+# Professional Organizations
+
+```{r}
+
+professional_dev %>% 
+  arrange(desc(When)) %>% 
+  brief_entries(
+    what = What,
+    when = When
+  )
+
+```
+
