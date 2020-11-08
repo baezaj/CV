@@ -4,7 +4,6 @@ surname: Baeza, PhD
 position: "Postdoctoral Fellow"
 address: "University of Pennsylvania"
 phone: 817-980-7281
-www: google.com
 email: "baeza@pennmedicine.upenn.edu"
 twitter: baezaj83
 github: baezaj
