@@ -11,25 +11,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# CV
 
-<!-- badges: start -->
-<!-- badges: end -->
+# Josue Baeza - Curriculum Vitae
 
-The goal of CV is to ...
+My CV created with the [vitae](https://github.com/mitchelloharawild/vitae) package in R. 
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
+[![CV](image/CV_preview.png)](https://github.com/baezaj/CV/blob/main/Baeza_cv.pdf)
