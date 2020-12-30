@@ -16,6 +16,9 @@ pubs$author <- unlist(lapply(pubs$pubid, function(x){
   get_complete_authors("lIYgwaYAAAAJ", x)
 }))
 
+pubs <- pubs %>% 
+  filter(!is.na(year))
+
 
 export(pubs, file = "data/publications_google_scholar.csv")
 
