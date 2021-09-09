@@ -30,7 +30,7 @@ library(scholar)
 
 # Summary
 
-Postdoctoral research fellow developing mass spectrometry-based proteomics methods for studying biological systems. My postdoctoral research is aimed at understanding biochemical mechanisms of protein homeostasis with a major focus on the study of protein turnover during fetal development. 
+Johnson Foundation (JF) Fellow at the University of Pennsylvania developing an independent research program. My research is aimed at understanding biological mechanisms of protein homeostasis with a major focus on the study of aging. 
 
 
 
