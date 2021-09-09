@@ -30,7 +30,7 @@ library(scholar)
 
 # Summary
 
-Johnson Foundation (JF) Fellow at the University of Pennsylvania developing an independent research program. My research is aimed at understanding biological mechanisms of protein homeostasis with a major focus on the study of aging. 
+Johnson Foundation (JF) Fellow at the University of Pennsylvania developing an independent research program using mass spectrometry. My research is aimed at understanding biological mechanisms of protein homeostasis with a major focus on the study of aging. 
 
 
 
