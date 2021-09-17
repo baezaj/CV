@@ -1,7 +1,7 @@
 ---
 name: Josue
 surname: Baeza, PhD
-position: "Postdoctoral Fellow"
+position: "Johnson Foundation (JF) Fellow"
 address: "University of Pennsylvania"
 phone: 817-980-7281
 email: "baeza@pennmedicine.upenn.edu"
